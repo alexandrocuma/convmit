@@ -32,13 +32,13 @@ pub fn cli() -> std::string::String {
 
 fn commit_type() -> String {
   let select_messages = vec![
-    CommitTypes::Fix.select_message(),
     CommitTypes::Feat.select_message(),
+    CommitTypes::Fix.select_message(),
   ];
 
   let select_values = vec![
-    CommitTypes::Fix.value(),
     CommitTypes::Feat.value(),
+    CommitTypes::Fix.value(),
   ];
 
   let selection = Select::with_theme(&ColorfulTheme::default())

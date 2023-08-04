@@ -1,19 +1,20 @@
 use clap::Parser;
 use console::Style;
 use dialoguer::Confirm;
-use clipboard::{ClipboardContext, ClipboardProvider};
 
 mod git_actions;
 mod interactive;
 mod command;
 
-use git_actions::{add, commit};
+use git_actions::{add, commit, push};
 
 fn main() {
-  let args = command::Cli::parse();
+  let cyan = Style::new().cyan();
   let green = Style::new().green();
+  
+  let args = command::Cli::parse();
 
-  git_add();
+  git_add(&green);
   
   let conventional_commit = if args.commit_type.interactive {
     interactive::cli()
@@ -21,20 +22,23 @@ fn main() {
     command::cli(args)
   };
 
-  let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
-  ctx.set_contents(conventional_commit.to_string()).unwrap();
-
   println!("\n");
   commit::commit(&conventional_commit);
-  println!("Changes commited with the message: {}", green.apply_to(&conventional_commit));
+  println!("Changes commited with the message: {}", cyan.apply_to(&conventional_commit));
 
+  git_push(&green)
 }
 
-fn git_add() {
-  let green = Style::new().green();
-
-  if Confirm::new().with_prompt("Add all files to commit ?").interact().unwrap() {
+fn git_add(color: &Style) {
+  if Confirm::new().with_prompt("Do you want to push all your changes?").interact().unwrap() {
     add::add_all();
-    println!("{}", green.apply_to("Added all files into the new commit"));
+    println!("{}", color.apply_to("Added all files into the new commit"));
+  }
+}
+
+fn git_push(color: &Style) {
+  if Confirm::new().with_prompt("Add all files to commit ?").interact().unwrap() {
+    push::push();
+    println!("{}", color.apply_to("Changes pushed into the branch"));
   }
 }
