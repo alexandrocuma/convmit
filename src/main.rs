@@ -22,7 +22,6 @@ fn main() {
     command::cli(args)
   };
 
-  println!("\n");
   commit::commit(&conventional_commit);
   println!("Changes commited with the message: {}", cyan.apply_to(&conventional_commit));
 
