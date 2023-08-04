@@ -1,5 +1,7 @@
 use clap::{Args, Parser};
 
+use crate::shared::set_co_authors;
+
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
@@ -45,8 +47,9 @@ pub fn cli(args: Cli) -> std::string::String {
   let is_breaking = if args.breaking_change { true } else { false };
   let breaking_mark = breaking_mark(is_breaking);
   let message = args.description.unwrap().to_owned();
+  let co_authors = set_co_authors();
   
-  format!("{}{}{}:{}", type_message, scope, breaking_mark, message)
+  format!("{}{}{}:{}{}", type_message, scope, breaking_mark, message, co_authors)
 }
 
 fn breaking_mark(is_breaking: bool) -> String {

@@ -1,3 +1,4 @@
+
 use clap::Parser;
 use console::Style;
 use dialoguer::Confirm;
@@ -5,6 +6,7 @@ use dialoguer::Confirm;
 mod git_actions;
 mod interactive;
 mod command;
+mod shared;
 
 use git_actions::{add, commit, push};
 

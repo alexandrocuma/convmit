@@ -1,5 +1,7 @@
 use dialoguer::{console::Term, theme::ColorfulTheme, Select, Input, Confirm};
 
+use crate::shared::set_co_authors;
+
 enum CommitTypes {
   Fix, 
   Feat,
@@ -44,8 +46,9 @@ pub fn cli() -> std::string::String {
   let is_breaking = is_breaking_change();
   let breaking_mark = breaking_mark(is_breaking);
   let message = description_message();
+  let co_authors = set_co_authors();
   
-  format!("{}{}{}:{}", type_message, scope, breaking_mark, message)
+  format!("{}{}{}:{}{}", type_message, scope, breaking_mark, message, co_authors)
 }
 
 fn commit_type() -> String {
@@ -83,6 +86,7 @@ fn commit_type() -> String {
     None => panic!("Error not type selected")
   }.to_owned()
 }
+
 fn is_breaking_change() -> bool {
   if Confirm::new().with_prompt("Is it a breaking change?").interact().unwrap() {
     true
@@ -90,6 +94,7 @@ fn is_breaking_change() -> bool {
     false
   }
 }
+
 fn breaking_mark(is_breaking: bool) -> String {
   if is_breaking {
     "!".to_owned()
@@ -118,4 +123,3 @@ fn description_message() -> String {
     .interact_text()
     .unwrap();
 }
-
