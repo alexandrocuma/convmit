@@ -1,3 +1,4 @@
+
 use clap::Parser;
 use console::Style;
 use dialoguer::Confirm;
@@ -5,6 +6,7 @@ use dialoguer::Confirm;
 mod git_actions;
 mod interactive;
 mod command;
+mod shared;
 
 use git_actions::{add, commit, push};
 
@@ -22,7 +24,6 @@ fn main() {
     command::cli(args)
   };
 
-  println!("\n");
   commit::commit(&conventional_commit);
   println!("Changes commited with the message: {}", cyan.apply_to(&conventional_commit));
 
