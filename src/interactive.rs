@@ -1,4 +1,5 @@
 use dialoguer::{console::Term, theme::ColorfulTheme, Select, Input, Confirm};
+
 enum CommitTypes {
   Fix, 
   Feat,
