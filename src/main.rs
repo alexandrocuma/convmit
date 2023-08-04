@@ -30,14 +30,14 @@ fn main() {
 }
 
 fn git_add(color: &Style) {
-  if Confirm::new().with_prompt("Do you want to push all your changes?").interact().unwrap() {
+  if Confirm::new().with_prompt("Add all files to commit?").interact().unwrap() {
     add::add_all();
     println!("{}", color.apply_to("Added all files into the new commit"));
   }
 }
 
 fn git_push(color: &Style) {
-  if Confirm::new().with_prompt("Add all files to commit ?").interact().unwrap() {
+  if Confirm::new().with_prompt("Do you want to push all your changes?").interact().unwrap() {
     push::push();
     println!("{}", color.apply_to("Changes pushed into the branch"));
   }

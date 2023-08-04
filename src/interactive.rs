@@ -3,19 +3,37 @@ use dialoguer::{console::Term, theme::ColorfulTheme, Select, Input, Confirm};
 enum CommitTypes {
   Fix, 
   Feat,
+  Docs, 
+  Style,
+  Refactor,
+  Perf,
+  Test,
+  Chore
 }
 
 impl CommitTypes {
   fn select_message(&self) -> &'static str {
     match self {
-      Self::Feat => "feat: a new feature",
-      Self::Fix =>  "fix: a bug fix",
+      Self::Feat      => "feat:     A code change that adds a new feature",
+      Self::Fix       => "fix:      A code change that fixes a bug",
+      Self::Docs      => "docs:     A documentation change",
+      Self::Style     => "style:    A code change that adds/fixes any style",
+      Self::Refactor  => "refactor: A code change that not fixes or adds anything new",
+      Self::Perf      => "perf:     A code change that improves performance",
+      Self::Test      => "test:     A code change that adds/fixes tests",
+      Self::Chore     => "chore:    Changes on build process or auxiliary tools and libraries (e.g. doc generation)"
     }
   } 
   fn value(&self) -> &'static str {
     match self {
-      Self::Feat => "feat",
-      Self::Fix =>  "fix",
+      Self::Feat      => "feat",
+      Self::Fix       => "fix",
+      Self::Docs      => "docs",
+      Self::Style     => "style",
+      Self::Refactor  => "refactor",
+      Self::Perf      => "perf",
+      Self::Test      => "test",
+      Self::Chore     => "chore"
     }
   } 
 }
@@ -34,11 +52,23 @@ fn commit_type() -> String {
   let select_messages = vec![
     CommitTypes::Feat.select_message(),
     CommitTypes::Fix.select_message(),
+    CommitTypes::Docs.select_message(),
+    CommitTypes::Style.select_message(),
+    CommitTypes::Refactor.select_message(),
+    CommitTypes::Perf.select_message(),
+    CommitTypes::Test.select_message(),
+    CommitTypes::Chore.select_message(),
   ];
 
   let select_values = vec![
     CommitTypes::Feat.value(),
     CommitTypes::Fix.value(),
+    CommitTypes::Docs.value(),
+    CommitTypes::Style.value(),
+    CommitTypes::Refactor.value(),
+    CommitTypes::Perf.value(),
+    CommitTypes::Test.value(),
+    CommitTypes::Chore.value(),
   ];
 
   let selection = Select::with_theme(&ColorfulTheme::default())
