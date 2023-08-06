@@ -1,52 +1,15 @@
-use clap::{Args, Parser};
+use crate::{shared::set_co_authors, cli_struct::{GenArgs, CommitTypes}};
 
-use crate::shared::set_co_authors;
-
-#[derive(Parser)]
-#[command(author, version, about, long_about = None)]
-pub struct Cli {
-  #[command(flatten)]
-  pub commit_type: CommitTypes,
-
-  #[arg(short, long)]
-  pub scope: Option<String>,
-
-  #[arg(short = 'b', long)]
-  pub breaking_change: bool,
-
-  #[arg(short, long)]
-  pub description: Option<String>,
-
-  #[arg(short = 'o', long)]
-  pub body: Option<String>,
-
-  #[arg(short = 't', long)]
-  pub footer: Option<String>,
-}
-
-#[derive(Args, Debug)]
-#[group(required = true, multiple = false)]
-pub struct CommitTypes {
-  #[arg(short = 'x', long)]
-  pub fix: bool,
-
-  #[arg(short, long)]
-  pub feat: bool,
-
-  #[arg(short = 'i', long)]
-  pub interactive: bool,
-}
-
-pub fn cli(args: Cli) -> std::string::String {
+pub fn cli(args: &GenArgs) -> std::string::String {
   let type_message = match args.commit_type {
     CommitTypes { fix: true, .. } => "fix".to_owned(),
     CommitTypes { feat: true, .. } => "feat".to_owned(),
     _ => "".to_owned()
   };
-  let scope = if args.scope.is_some() { format!("({})", args.scope.unwrap().to_owned()) } else { "".to_owned() };
+  let scope = if args.scope.is_some() { format!("({})", args.scope.as_ref().unwrap().to_owned()) } else { "".to_owned() };
   let is_breaking = if args.breaking_change { true } else { false };
   let breaking_mark = breaking_mark(is_breaking);
-  let message = args.description.unwrap().to_owned();
+  let message = args.description.as_ref().unwrap().to_owned();
   let co_authors = set_co_authors();
   
   format!("{}{}{}: {}{}", type_message, scope, breaking_mark, message, co_authors)

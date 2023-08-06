@@ -1,46 +1,33 @@
 
 use clap::Parser;
 use console::Style;
-use dialoguer::Confirm;
 
+mod configuration;
 mod git_actions;
 mod interactive;
+mod cli_struct;
 mod command;
 mod shared;
-mod configuration;
 
-use git_actions::{add, commit, push};
+use git_actions::commit;
 
 fn main() {
   let cyan = Style::new().cyan();
-  let green = Style::new().green();
-  
-  let args = command::Cli::parse();
+  let cli = cli_struct::Cli::parse();
 
-  git_add(&green);
-  
-  let conventional_commit = if args.commit_type.interactive {
-    interactive::cli()
-  } else {
-    command::cli(args)
-  };
-
-  commit::commit(&conventional_commit);
-  println!("Changes commited with the message:\n\n{}\n", cyan.apply_to(&conventional_commit));
-
-  git_push(&green)
-}
-
-fn git_add(color: &Style) {
-  if Confirm::new().with_prompt("Add all files to commit?").interact().unwrap() {
-    add::add_all();
-    println!("{}", color.apply_to("Added all files into the new commit"));
-  }
-}
-
-fn git_push(color: &Style) {
-  if Confirm::new().with_prompt("Do you want to push all your changes?").interact().unwrap() {
-    push::push();
-    println!("{}", color.apply_to("Changes pushed into the branch"));
+  match &cli.command {
+    Some(cli_struct::Commands::Init) => {
+      // TO DO Create Config file on init  
+    }
+    Some(cli_struct::Commands::Gen(args)) => {
+      let conventional_commit = command::cli(args);
+      commit::commit(&conventional_commit);
+      println!("Changes commited with the message:\n\n{}\n", cyan.apply_to(&conventional_commit));
+    }
+    None => {
+      let conventional_commit = interactive::cli();
+      commit::commit(&conventional_commit);
+      println!("Changes commited with the message:\n\n{}\n", cyan.apply_to(&conventional_commit));
+    }
   }
 }
