@@ -6,13 +6,12 @@ pub struct Settings {
   pub scopes: Vec<String>,
 }
 
-pub fn get_configuration() -> Result<Settings, config::ConfigError> {
+pub fn get_configuration(file_path: &str) -> Result<Settings, config::ConfigError> {
   let mut home_dir = match dirs::home_dir() {
     Some(path) => path,
     None => panic!("Can't determine the root directory.")
   };
 
-  let file_path = ".convmit/config.yml";
   home_dir.push(file_path);
 
   let path = Path::new(&home_dir).to_str().expect(format!("Can't find your config file. Make sure ~/{} exists", file_path).as_str());
@@ -22,4 +21,44 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
     .build()?;
 
   settings.try_deserialize::<Settings>()
+}
+
+#[cfg(test)]
+mod tests {
+  use std::fs::{File, remove_file};
+  use std::io::Write;
+
+  #[test]
+  fn it_gets_configuration() {
+    // Test setup
+    let test_file_path= ".convmit/test.yml";
+    let mut home_dir = match dirs::home_dir() {
+      Some(path) => path,
+      None => panic!("Can't determine the root directory.")
+    };
+
+    home_dir.push(test_file_path);
+
+    match File::create(&home_dir) {
+      Ok(mut file) => {
+        let content = "coauthors:\n  - John Doe\n  - Jane Doe\nscopes:\n  - test_1";
+        if let Err(e) = file.write_all(content.as_bytes()) {
+          eprintln!("Error while writing to file: {}", e);
+        }
+      },
+      Err(e) => eprintln!("Error while creating file: {}", e)
+    }
+
+    // Test assert
+    let settings = super::get_configuration(test_file_path).unwrap();
+    assert_eq!(settings.coauthors.len(), 2);
+    assert_eq!(settings.scopes.len(), 1);
+    remove_file(&home_dir).unwrap();
+  }
+
+  #[test]
+  fn it_panics_when_configuration_file_does_not_exist() {
+    let settings = super::get_configuration(".convmit/config.yaaaml");
+    assert!(settings.is_err());
+  }
 }
