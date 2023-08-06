@@ -20,7 +20,7 @@ pub fn set_co_authors() -> String {
       .interact()
       .unwrap();
 
-    "\n".to_owned() + &selection.iter().map(|index| "Co-authored-by: ".to_owned() + &co_authors[*index].to_owned()).collect::<Vec<String>>().join("\n")
+    "\n\n".to_owned() + &selection.iter().map(|index| "Co-authored-by: ".to_owned() + &co_authors[*index].to_owned()).collect::<Vec<String>>().join("\n")
   } else {
     "".to_owned()
   }

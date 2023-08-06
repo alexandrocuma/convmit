@@ -48,7 +48,7 @@ pub fn cli() -> std::string::String {
   let message = description_message();
   let co_authors = set_co_authors();
   
-  format!("{}{}{}:{}{}", type_message, scope, breaking_mark, message, co_authors)
+  format!("{}{}{}: {}{}", type_message, scope, breaking_mark, message, co_authors)
 }
 
 fn commit_type() -> String {
