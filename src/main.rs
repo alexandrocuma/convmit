@@ -26,7 +26,7 @@ fn main() {
   };
 
   commit::commit(&conventional_commit);
-  println!("Changes commited with the message: {}", cyan.apply_to(&conventional_commit));
+  println!("Changes commited with the message:\n\n{}\n", cyan.apply_to(&conventional_commit));
 
   git_push(&green)
 }
