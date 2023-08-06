@@ -3,7 +3,7 @@ use dialoguer::{Confirm, MultiSelect};
 use crate::configuration;
 
 fn read_coauthors() -> Vec<String> {
-  let settings = match configuration::get_configuration() {
+  let settings = match configuration::get_configuration(".convmit/config.yml") {
     Ok(settings) => settings,
     Err(err) => panic!("{}", err)
   };
