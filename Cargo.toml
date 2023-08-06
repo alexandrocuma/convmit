@@ -9,3 +9,6 @@ edition = "2021"
 clap = { version = "4.3.19", features = ["derive"] }
 console = "0.15.7"
 dialoguer = "0.10.4"
+config = "0.13"
+serde = { version = "1.0.160", features = ["derive"] }
+dirs = "5.0"

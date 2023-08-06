@@ -11,7 +11,7 @@ pub struct Cli {
   #[arg(short, long)]
   pub scope: Option<String>,
 
-  #[arg(short = 'i', long)]
+  #[arg(short = 'b', long)]
   pub breaking_change: bool,
 
   #[arg(short, long)]
@@ -33,7 +33,7 @@ pub struct CommitTypes {
   #[arg(short, long)]
   pub feat: bool,
 
-  #[arg(short = 'e', long)]
+  #[arg(short = 'i', long)]
   pub interactive: bool,
 }
 

@@ -7,6 +7,7 @@ mod git_actions;
 mod interactive;
 mod command;
 mod shared;
+mod configuration;
 
 use git_actions::{add, commit, push};
 
