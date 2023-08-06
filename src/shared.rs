@@ -1,11 +1,14 @@
 
-use std::{fs::File, io::{BufReader, BufRead}};
 use dialoguer::{Confirm, MultiSelect};
+use crate::configuration;
 
 fn read_coauthors() -> Vec<String> {
-  let file = File::open("config/co-authors.txt").unwrap();
-  let reader = BufReader::new(file);
-  reader.lines().map(|line| line.unwrap()).filter(|line| !line.is_empty()).collect::<Vec<String>>()
+  let settings = match configuration::get_configuration() {
+    Ok(settings) => settings,
+    Err(err) => panic!("{}", err)
+  };
+
+  settings.coauthors
 }
 
 pub fn set_co_authors() -> String {
@@ -17,7 +20,7 @@ pub fn set_co_authors() -> String {
       .interact()
       .unwrap();
 
-    "\n".to_owned() + &selection.iter().map(|index| "Co-authored-by: ".to_owned() + &co_authors[*index].to_owned()).collect::<Vec<String>>().join("\n")
+    "\n\n".to_owned() + &selection.iter().map(|index| "Co-authored-by: ".to_owned() + &co_authors[*index].to_owned()).collect::<Vec<String>>().join("\n")
   } else {
     "".to_owned()
   }

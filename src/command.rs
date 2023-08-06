@@ -11,7 +11,7 @@ pub struct Cli {
   #[arg(short, long)]
   pub scope: Option<String>,
 
-  #[arg(short = 'i', long)]
+  #[arg(short = 'b', long)]
   pub breaking_change: bool,
 
   #[arg(short, long)]
@@ -33,7 +33,7 @@ pub struct CommitTypes {
   #[arg(short, long)]
   pub feat: bool,
 
-  #[arg(short = 'e', long)]
+  #[arg(short = 'i', long)]
   pub interactive: bool,
 }
 
@@ -49,7 +49,7 @@ pub fn cli(args: Cli) -> std::string::String {
   let message = args.description.unwrap().to_owned();
   let co_authors = set_co_authors();
   
-  format!("{}{}{}:{}{}", type_message, scope, breaking_mark, message, co_authors)
+  format!("{}{}{}: {}{}", type_message, scope, breaking_mark, message, co_authors)
 }
 
 fn breaking_mark(is_breaking: bool) -> String {

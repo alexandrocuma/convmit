@@ -7,6 +7,7 @@ mod git_actions;
 mod interactive;
 mod command;
 mod shared;
+mod configuration;
 
 use git_actions::{add, commit, push};
 
@@ -25,7 +26,7 @@ fn main() {
   };
 
   commit::commit(&conventional_commit);
-  println!("Changes commited with the message: {}", cyan.apply_to(&conventional_commit));
+  println!("Changes commited with the message:\n\n{}\n", cyan.apply_to(&conventional_commit));
 
   git_push(&green)
 }
