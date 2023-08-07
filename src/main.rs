@@ -10,6 +10,7 @@ mod command;
 mod shared;
 
 use git_actions::commit;
+use crate::configuration::create_configuration;
 
 fn main() {
   let cyan = Style::new().cyan();
@@ -17,7 +18,7 @@ fn main() {
 
   match &cli.command {
     Some(cli_struct::Commands::Init) => {
-      // TO DO Create Config file on init  
+      create_configuration(".convmit/");
     }
     Some(cli_struct::Commands::Gen(args)) => {
       let conventional_commit = command::cli(args);

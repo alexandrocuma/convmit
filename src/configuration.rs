@@ -1,9 +1,32 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::io::Write;
+use std::fs::File;
 
 #[derive(serde::Deserialize)]
 pub struct Settings {
   pub coauthors: Vec<String>,
   pub scopes: Vec<String>,
+}
+
+pub fn create_configuration(folder_path: &str){
+  let mut home_dir = match dirs::home_dir() {
+    Some(path) => path,
+    None => panic!("Can't determine the root directory.")
+  };
+  home_dir.push(folder_path);
+
+  let folder_path = Path::new(&home_dir).to_str().expect(format!("Can't find your config file. Make sure ~/{} exists", folder_path).as_str());
+
+  if !std::path::Path::new(folder_path).exists() {
+    match std::fs::create_dir(folder_path) {
+      Ok(..) => {
+        create_file(home_dir);
+      },
+      Err(e) => eprintln!("Error while creating folder: {}", e)
+    };
+  } else {
+    create_file(home_dir);
+  }
 }
 
 pub fn get_configuration(file_path: &str) -> Result<Settings, config::ConfigError> {
@@ -14,7 +37,7 @@ pub fn get_configuration(file_path: &str) -> Result<Settings, config::ConfigErro
 
   home_dir.push(file_path);
 
-  let path = Path::new(&home_dir).to_str().expect(format!("Can't find your config file. Make sure ~/{} exists", file_path).as_str());
+  let path = Path::new(&home_dir).to_str().expect(format!("Unable to create the folder").as_str());
 
   let settings = config::Config::builder()
     .add_source(config::File::new(path, config::FileFormat::Yaml))
@@ -22,6 +45,22 @@ pub fn get_configuration(file_path: &str) -> Result<Settings, config::ConfigErro
 
   settings.try_deserialize::<Settings>()
 }
+
+fn create_file(mut home_dir: PathBuf) {
+  home_dir.push("config.yml");
+
+  let file_path = Path::new(&home_dir).to_str().expect(format!("Unable to create the config file").as_str());
+
+  match File::create(&file_path) {
+    Ok(mut file) => {
+      let content = "coauthors:\n  - John Doe <johndoe@test.com>\n  - Jane Doe<janedoe@test.com>\nscopes:\n  - test_1";
+      if let Err(e) = file.write_all(content.as_bytes()) {
+        eprintln!("Error while writing to file: {}", e);
+      }
+    },
+    Err(e) => eprintln!("Error while creating file: {}", e)
+  };
+} 
 
 #[cfg(test)]
 mod tests {
