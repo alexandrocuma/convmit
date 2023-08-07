@@ -61,4 +61,6 @@ To enable the use of co authors in the commit message you will need to run the c
 convmit init
 ```
 
-#### (WIP) Full use and docs of covnmits under construction
+To modify the co authors you can find the config file in your `home` directory under `.convmit/config.yml`
+
+#### (WIP) Full use and docs of covnmit under construction
