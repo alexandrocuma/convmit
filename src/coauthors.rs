@@ -10,7 +10,7 @@ fn read_coauthors() -> Vec<String> {
     settings.coauthors
 }
 
-pub fn set_co_authors() -> String {
+pub fn set_coauthors() -> String {
     if Confirm::new()
         .with_prompt("Do you have co-authors in this commit?")
         .interact()
